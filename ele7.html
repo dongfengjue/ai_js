@@ -45,14 +45,14 @@
     <div class="container">
       <!-- 左边树组件 -->
       <div class="tree-container">
-        <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick" @contextmenu.native="showContextMenu">
+        <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick" @contextmenu.native="showContextMenu($event, $event.currentTarget.__vue__.$data.node)">
           <!-- 右键菜单 -->
-          <el-dropdown v-if="showMenu" :visible="showMenu" @command="handleMenuCommand" trigger="manual"
-            :placement="placement">
+          <el-dropdown v-if="showMenu" :visible="showMenu" @command="handleMenuCommand" trigger="manual" :placement="placement">
             <span style="display: none;"></span>
             <el-dropdown-menu>
               <el-dropdown-item command="edit">编辑</el-dropdown-item>
               <el-dropdown-item command="delete">删除</el-dropdown-item>
+              <el-dropdown-item command="add">添加子节点</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-tree>
@@ -165,28 +165,19 @@
           this.showMenu = true;
           this.placement = 'bottom-start';
           this.currentNode = data;
-          // 监听点击事件，点击菜单外区域隐藏菜单
-          document.addEventListener('click', this.hideContextMenu);
-        },
-        // 隐藏右键菜单
-        hideContextMenu() {
-          this.showMenu = false;
-          // 移除监听事件，避免多次添加
-          document.removeEventListener('click', this.hideContextMenu);
         },
         // 处理右键菜单命令
         handleMenuCommand(command) {
           this.showMenu = false;
-          switch (command) {
-            case 'edit':
-              console.log('编辑节点:', this.currentNode);
-              break;
-            case 'delete':
-              console.log('删除节点:', this.currentNode);
-              break;
-            default:
-              console.warn('未知的菜单命令:', command);
-              break;
+          if (command === 'edit') {
+            console.log('编辑节点:', this.currentNode);
+            // 这里可以添加编辑节点的逻辑
+          } else if (command === 'delete') {
+            console.log('删除节点:', this.currentNode);
+            // 这里可以添加删除节点的逻辑
+          } else if (command === 'add') {
+            console.log('添加子节点:', this.currentNode);
+            // 这里可以添加添加子节点的逻辑
           }
         }
       }
