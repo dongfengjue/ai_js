@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>页面标题</title>
+  <!-- 引入 CSS 样式文件 -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- 引入 Element UI 的 CSS 文件 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- 引入 JavaScript 脚本文件 -->
+  <script src="script.js" defer></script>
+  <!-- 引入 Vue.js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <!-- 引入 Element UI 的 JavaScript 文件 -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+
+<body>
+  <!-- 页面内容 -->
+  <header>
+    <!-- 头部内容，如导航栏、Logo 等 -->
+  </header>
+
+  <main>
+    <!-- 主要内容区域 -->
+    <div id="app">
+      <!-- Element UI 表格 -->
+      <el-table :data="tableData" style="width: 100%">
+        <el-table-column prop="date" label="日期" width="180"></el-table-column>
+        <el-table-column prop="name" label="姓名" width="180"></el-table-column>
+        <el-table-column prop="address" label="地址"></el-table-column>
+      </el-table>
+    </div>
+  </main>
+
+  <footer>
+    <!-- 页脚内容，如版权信息、联系方式等 -->
+  </footer>
+
+  <!-- 其他可能需要的元素，如侧边栏、弹出框等 -->
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: function () {
+        return {
+          tableData: [{
+              date: '2016-05-02',
+              name: '王小虎',
+              address: '上海市普陀区金沙江路 1518 弄'
+            },
+            {
+              date: '2016-05-04',
+              name: '王小虎',
+              address: '上海市普陀区金沙江路 1517 弄'
+            },
+            {
+              date: '2016-05-01',
+              name: '王小虎',
+              address: '上海市普陀区金沙江路 1519 弄'
+            },
+            {
+              date: '2016-05-03',
+              name: '王小虎',
+              address: '上海市普陀区金沙江路 1516 弄'
+            }
+          ]
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
