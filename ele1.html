@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面标题</title>
+    <!-- 引入 Element UI 的 CSS 文件 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入 CSS 样式文件 -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- 引入 Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入 Element UI 的 JavaScript 文件 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- 引入 JavaScript 脚本文件 -->
+    <script src="script.js" defer></script>
+    <style>
+        /* 自定义样式，美化布局 */
+        #app {
+            padding: 20px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 页面内容 -->
+        <header>
+            <!-- 头部内容，如导航栏、Logo 等 -->
+            <div class="search-bar">
+                <!-- 添加搜索框 -->
+                <el-input v-model="searchText" placeholder="搜索..." style="width: 300px;"></el-input>
+            </div>
+        </header>
+
+        <main>
+            <!-- 主要内容区域 -->
+            <div class="table-container">
+                <el-table :data="filteredTableData" stripe style="width: 100%">
+                    <el-table-column prop="name" label="姓名"></el-table-column>
+                    <el-table-column prop="age" label="年龄"></el-table-column>
+                </el-table>
+            </div>
+            <!-- 分页插件 -->
+            <div class="pagination-container">
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                    :current-page="currentPage" :page-sizes="[5, 10, 20]" :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper" :total="tableData.length">
+                </el-pagination>
+            </div>
+        </main>
+
+        <footer>
+            <!-- 页脚内容，如版权信息、联系方式等 -->
+        </footer>
+
+        <!-- 其他可能需要的元素，如侧边栏、弹出框等 -->
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                searchText: '', // 搜索框输入的文本
+                tableData: [
+                    { name: '张三', age: 20 },
+                    { name: '李四', age: 25 },
+                    { name: '王五', age: 30 },
+                    { name: '赵六', age: 35 },
+                    { name: '孙七', age: 40 }
+                ],
+                currentPage: 1, // 当前页码
+                pageSize: 5 // 每页显示的条数
+            },
+            computed: {
+                filteredTableData() {
+                    // 过滤数据
+                    return this.tableData.filter(item => item.name.includes(this.searchText));
+                }
+            },
+            methods: {
+                handleSizeChange(newSize) {
+                    this.pageSize = newSize;
+                },
+                handleCurrentChange(newPage) {
+                    this.currentPage = newPage;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
