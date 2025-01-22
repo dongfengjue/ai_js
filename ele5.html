@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>页面标题</title>
+  <!-- 引入 Element UI 的 CSS 文件 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <!-- 引入 CSS 样式文件 -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- 引入 Vue.js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <!-- 引入 Element UI 的 JavaScript 文件 -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <!-- 引入 JavaScript 脚本文件 -->
+  <script src="script.js" defer></script>
+  <!-- 引入 xlsx 库 -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.4/dist/xlsx.full.min.js"></script>
+  <style>
+    /* 布局样式 */
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    .tree-container {
+      width: 200px;
+      padding: 10px;
+      border-right: 1px solid #ccc;
+      overflow-y: auto;
+    }
+
+    .content-container {
+      flex: 1;
+      padding: 10px;
+    }
+
+    .search-container {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="container">
+      <!-- 左边树组件 -->
+      <div class="tree-container">
+        <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+      </div>
+      <!-- 右边内容区域 -->
+      <div class="content-container">
+        <!-- 搜索框 -->
+        <div class="search-container">
+          <el-input v-model="searchText" placeholder="请输入搜索内容" @input="filterTable"></el-input>
+        </div>
+        <!-- 文件上传组件 -->
+        <el-upload class="upload-demo" action="#" :on-change="handleExcelUpload" :auto-upload="false">
+          <el-button size="small" type="primary">选择 Excel 文件</el-button>
+        </el-upload>
+        <!-- 表格 -->
+        <el-table :data="tableData.filter(item => item.name.includes(searchText))" stripe style="width: 100%">
+          <el-table-column prop="name" label="名称"></el-table-column>
+          <el-table-column prop="age" label="年龄"></el-table-column>
+          <el-table-column prop="address" label="地址"></el-table-column>
+        </el-table>
+        <!-- 分页插件 -->
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+          :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData.length">
+        </el-pagination>
+      </div>
+    </div>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        // 树组件数据
+        treeData: [
+          {
+            label: '一级节点 1',
+            children: [
+              {
+                label: '二级节点 1-1',
+                children: [
+                  {
+                    label: '三级节点 1-1-1'
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            label: '一级节点 2',
+            children: [
+              {
+                label: '二级节点 2-1'
+              }
+            ]
+          }
+        ],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+        // 表格数据
+        tableData: [
+          {
+            name: '张三',
+            age: 20,
+            address: '北京'
+          },
+          {
+            name: '李四',
+            age: 22,
+            address: '上海'
+          },
+          {
+            name: '王五',
+            age: 25,
+            address: '广州'
+          }
+        ],
+        // 搜索文本
+        searchText: '',
+        // 当前页码
+        currentPage: 1,
+        // 每页显示条数
+        pageSize: 5
+      },
+      methods: {
+        // 树节点点击事件
+        handleNodeClick(data) {
+          console.log('点击了树节点:', data);
+          // 这里可以根据树节点的点击事件来过滤表格数据
+          // 例如：this.tableData = this.tableData.filter(item => item.name.includes(data.label));
+        },
+        // 搜索框输入事件
+        filterTable() {
+          this.currentPage = 1;
+        },
+        // 分页大小改变事件
+        handleSizeChange(size) {
+          this.pageSize = size;
+        },
+        // 当前页码改变事件
+        handleCurrentChange(page) {
+          this.currentPage = page;
+        },
+        // 处理 Excel 文件上传
+        handleExcelUpload(file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            // 这里可以对解析出来的 jsonData 进行处理，比如更新 tableData
+            console.log('解析出来的 Excel 数据:', jsonData);
+          };
+          reader.readAsArrayBuffer(file.raw);
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
