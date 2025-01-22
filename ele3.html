@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel 数据转 Element UI 表格</title>
+    <!-- 引入 Element UI 的 CSS 样式文件（CDN 方式） -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入 Vue.js 的 CDN 资源 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入 Element UI 的 CDN 资源 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- 引入 Papa Parse 库的 CDN 资源 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Element UI 的表格组件 -->
+        <el-table :data="tableData" style="width: 100%">
+            <!-- 动态生成表格列 -->
+            <el-table-column v-for="(column, index) in columns" :key="index" :prop="column" :label="column">
+            </el-table-column>
+        </el-table>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    tableData: [], // 存储表格数据
+                    columns: [] // 存储表格列名
+                };
+            },
+            mounted() {
+                // 模拟从 CSV 文件中读取数据，这里可以替换为实际的文件路径
+                const csvData = `姓名,年龄,性别
+张三,20,男
+李四,22,女
+王五,25,男`;
+
+                // 使用 Papa Parse 解析 CSV 数据
+                Papa.parse(csvData, {
+                    header: true, // 第一行作为表头
+                    complete: (result) => {
+                        this.tableData = result.data; // 将解析后的数据赋值给表格数据
+                        // 获取表头作为表格列名
+                        this.columns = Object.keys(result.data[0]); 
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
